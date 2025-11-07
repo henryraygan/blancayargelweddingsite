@@ -1,0 +1,210 @@
+/* ============================= */
+/* RESET & GLOBAL CONFIG         */
+/* ============================= */
+
+/* * {
+  outline: 1px solid #fff !important;
+  background-color: rgba(0, 2, 54, .1) !important;
+}
+ */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-color: #fffcf2;
+  --text-color: #9e0505;
+  --text-color-secondary: #bb0909;
+  --text-color-contrast: #F8EFD0;
+  --font-title: "Playfair Display", serif;
+  --font-content: "Prompt", sans-serif;
+
+  /* Spacing scale */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 3rem;
+  --space-xl: 5rem;
+
+  /* Shadows */
+  --shadow-polaroid: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================= */
+/* BASE STYLES                   */
+/* ============================= */
+body {
+  background-color: var(--bg-color);
+  font-family: var(--font-content);
+  color: var(--text-color);
+  line-height: 1.5;
+  font-style: normal;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* ============================= */
+/* TYPOGRAPHY UTILITIES          */
+/* ============================= */
+.playfair {
+  font-family: var(--font-title);
+  font-optical-sizing: auto;
+}
+
+.playfair-regular {
+  font-weight: 400;
+}
+
+.playfair-italic {
+  font-weight: 300;
+  font-style: italic;
+}
+
+.text-description {
+  font-weight: 300;
+  font-size: 1.55rem;
+  line-height: 1.4;
+}
+
+.text-color-secondary {
+  color: var(--text-color-secondary) !important;
+}
+
+.btn-primary {
+  --bs-btn-color: var(--text-color-contrast);
+  --bs-btn-bg: var(--text-color);
+  --bs-btn-border-color: var(--text-color);
+  --bs-btn-hover-color: var(--text-color-contrast);
+  --bs-btn-hover-bg: var(--text-color);
+  --bs-btn-hover-border-color: var(--text-color);
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: var(--text-color-contrast);
+  --bs-btn-active-bg: var(--text-color);
+  --bs-btn-active-border-color: var(--text-color);
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: var(--text-color-contrast);
+  --bs-btn-disabled-bg: var(--text-color);
+  --bs-btn-disabled-border-color: var(--text-color);
+}
+
+.form-control-wedding {
+  box-shadow: 0px 4px 11.9px 0px rgba(0, 0, 0, 0.25);
+  padding: 1rem 1rem;
+  width: 35rem;
+  border-radius: .25rem;
+}
+
+.schedule {
+  margin-top: -5rem;
+}
+
+.save-the-date-title {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 5rem;
+}
+
+/* .save-the-date-title svg:first-child {
+  margin-right: -30rem;
+}
+
+.save-the-date-title svg:last-child {
+  margin-left: -30rem;
+} */
+
+.save-the-date-title-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 11rem;
+}
+
+.save-the-date-title-content-label {
+  font-weight: 300;
+  font-size: 2rem;
+}
+
+.save-the-date-title-content-date {
+  font-family: "Playfair Display", serif;
+  font-weight: 100;
+  font-style: italic;
+  font-size: 5rem;
+}
+
+.save-the-date-title-content a {
+  text-decoration: none;
+  font-size: 1.3rem;
+}
+
+.form-control:focus {
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border-color: #9e0505;
+  outline: 0;
+  box-shadow: 0 0 0 .25rem rgba(158, 5, 5, .25);
+}
+
+.title-only-desktop {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* ============================= */
+/* RESPONSIVE MOBILE             */
+/* ============================= */
+@media (max-width: 768px) {
+
+  .home-view {
+    width: 100vw;
+    overflow: hidden;
+  }
+
+
+  .only-mobile {
+    display: block;
+  }
+
+  .title-only-desktop {
+    display: none !important;
+  }
+
+  .no-mobile {
+    display: none !important;
+  }
+
+  .section-layout {
+    margin-bottom: 1rem;
+    padding: 0;
+  }
+
+  .save-the-date-title-content {
+    padding-top: 0;
+    margin-top: 5rem;
+  }
+
+  .save-the-date-title-content-date {
+    font-size: 15vmin;
+    font-weight: bold;
+  }
+}
