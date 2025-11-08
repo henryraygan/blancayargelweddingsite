@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "deploy": "yarn build && firebase deploy"
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "firebase-tools": "^14.24.0",
     "gsap": "^3.13.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",

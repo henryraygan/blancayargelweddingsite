@@ -54,4 +54,16 @@ import rightDecor from "@/assets/media/right-decor.svg";
   right: 0;
   background-image: var(--right-decor);
 }
+
+@media (max-width: 768px) {
+  .section-layout {
+    margin-bottom: 0.5rem;
+  }
+
+  .section-layout::before,
+  .section-layout::after {
+    content: "";
+    background-image: none;
+  }
+}
 </style>

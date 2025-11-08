@@ -1,45 +1,57 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
+
+const isFocused = ref(false);
+const searchQuery = ref("");
+const selectedGuest = ref(null);
+const notFound = ref(false);
+const showResults = ref(false);
+const isTyping = ref(false); // ✅ nueva bandera
+
+const isActive = computed(
+  () => isFocused.value || searchQuery.value.trim().length > 0
+);
 
 const guests = ref([
-  { name: "Blanca y Argel", tickets_quantity: 4 },
-  { name: "Blanquita y Antonio", tickets_quantity: 4 },
-  { name: "Homero Aguilar", tickets_quantity: 5 },
-  { name: "José A.González V.", tickets_quantity: 4 },
-  { name: "Beatriz González V.", tickets_quantity: 6 },
-  { name: "Magdalena Laguna G.", tickets_quantity: 4 },
-  { name: "Rosa Ma. Y Araceli", tickets_quantity: 2 },
-  { name: "Enrique Toribio", tickets_quantity: 4 },
-  { name: "Hermelinda Vilchis C.", tickets_quantity: 4 },
+  { name: "Familia De Gante González", tickets_quantity: 4 },
+  { name: "Familia Mariscal De Gante", tickets_quantity: 4 },
+  { name: "Familia Aguilar González", tickets_quantity: 5 },
+  { name: "Familia González Monterosa", tickets_quantity: 4 },
+  { name: "Beatriz González Vilchis", tickets_quantity: 6 },
+  { name: "Nadia Magdalena Laguna González", tickets_quantity: 4 },
+  { name: "Rosa Ma. y Araceli González Ortiz", tickets_quantity: 2 },
+  { name: "Familia Toribio Rivera", tickets_quantity: 4 },
+  { name: "Hermelinda Vilchis Castillo", tickets_quantity: 4 },
   { name: "Vanesa García", tickets_quantity: 2 },
-  { name: "Leticia Palma (Omar)", tickets_quantity: 4 },
-  { name: "Hector Torres (Male)", tickets_quantity: 4 },
-  { name: "Sonia Jimenez", tickets_quantity: 2 },
-  { name: "Abel Jimenez", tickets_quantity: 3 },
-  { name: "Ma. Esther Palma", tickets_quantity: 3 },
-  { name: "Karina Palma", tickets_quantity: 3 },
-  { name: "Ivón González", tickets_quantity: 3 },
-  { name: "Ivón Lopéz (Pamela)", tickets_quantity: 3 },
-  { name: "Estela Beltrán", tickets_quantity: 3 },
-  { name: "Carmén Rojas", tickets_quantity: 2 },
-  { name: "Everardo Clemente (Gaby)", tickets_quantity: 2 },
-  { name: "Gabriela Clemente", tickets_quantity: 2 },
-  { name: "Monica Clemente", tickets_quantity: 2 },
-  { name: "Julio Arroyo ( Beatriz)", tickets_quantity: 5 },
-  { name: "Beatriz Arrroyo (Jr)", tickets_quantity: 2 },
+  { name: "Leticia Palma", tickets_quantity: 2 },
+  { name: "Omar Rámirez Palma", tickets_quantity: 2 },
+  { name: "Familia Torres García", tickets_quantity: 4 },
+  { name: "Sonia Jimenez y Familia", tickets_quantity: 2 },
+  { name: "Abel Jimenez y Familia", tickets_quantity: 3 },
+  { name: "Ma. Esther Palma y Familia", tickets_quantity: 3 },
+  { name: "Karina Palma y Familia", tickets_quantity: 3 },
+  { name: "Ivón González Cazas", tickets_quantity: 3 },
+  { name: "Ivón Lopéz", tickets_quantity: 3 },
+  { name: "Estela Beltrán y Familia", tickets_quantity: 3 },
+  { name: "Carmén Rojas y Familia", tickets_quantity: 2 },
+  { name: "Familia Clemente Paniagua", tickets_quantity: 2 },
+  { name: "Gabriela y Dante y Familia", tickets_quantity: 2 },
+  { name: "Monica y Eduardo", tickets_quantity: 2 },
+  { name: "Familia Arroyo Chavez", tickets_quantity: 5 },
+  { name: "Beatriz y Oscar", tickets_quantity: 2 },
   { name: "Leticia Moreno", tickets_quantity: 2 },
-  { name: "Francisco De Gante U.", tickets_quantity: 4 },
-  { name: "Humberto Rivera (Angelica)", tickets_quantity: 3 },
-  { name: "Patricia De Gante U.", tickets_quantity: 3 },
-  { name: "Maria de la Paz (Paco)", tickets_quantity: 3 },
-  { name: "Arcelia Macias", tickets_quantity: 2 },
-  { name: "Luzciel De Gante M.", tickets_quantity: 2 },
-  { name: "Nadxieli De Gante M.", tickets_quantity: 3 },
-  { name: "Ludwing De Gante", tickets_quantity: 4 },
-  { name: "Aurora Fernández", tickets_quantity: 1 },
-  { name: "Graciel De Gante F.", tickets_quantity: 2 },
-  { name: "Dalia De Gante F.", tickets_quantity: 3 },
-  { name: "Laura De Gante F.", tickets_quantity: 3 },
+  { name: "Familia De Gante Martínez", tickets_quantity: 4 },
+  { name: "Familia Rivera De Gante", tickets_quantity: 3 },
+  { name: "Patricia De Gante y Familia", tickets_quantity: 3 },
+  { name: "Maria De la Paz y Francisco", tickets_quantity: 3 },
+  { name: "Arcelia Macias y Familia", tickets_quantity: 2 },
+  { name: "Luzciel De Gante Macias", tickets_quantity: 2 },
+  { name: "Nadxieli y Alfonso y Familia", tickets_quantity: 3 },
+  { name: "Ludwing De Gante y Familia", tickets_quantity: 4 },
+  { name: "Aurora Fernández Díaz", tickets_quantity: 1 },
+  { name: "Graciel De Gante Fernández", tickets_quantity: 2 },
+  { name: "Dalia y Mario y Familia", tickets_quantity: 3 },
+  { name: "Laura y Familia", tickets_quantity: 3 },
   { name: "Erik Cortez", tickets_quantity: 2 },
   { name: "Eduardo Cardeña", tickets_quantity: 2 },
   { name: "Omar Moreira", tickets_quantity: 2 },
@@ -51,19 +63,22 @@ const guests = ref([
   { name: "Fernanda Lopéz", tickets_quantity: 2 },
   { name: "Erendira", tickets_quantity: 1 },
   { name: "Natalia Elizondo", tickets_quantity: 1 },
-  { name: "Yazmin Arana", tickets_quantity: 2 },
+  { name: "Yazmin y Conrado", tickets_quantity: 2 },
   { name: "Alfonso Aviles", tickets_quantity: 2 },
   { name: "Claudia Rodriguez", tickets_quantity: 2 },
-  { name: "Laura Vilchis", tickets_quantity: 1 },
-  { name: "Patricia Urrieta", tickets_quantity: 3 },
-  { name: "Fabiola Urrieta", tickets_quantity: 2 },
-  { name: "Veronica Urrieta", tickets_quantity: 2 },
-  { name: "Erika Palma", tickets_quantity: 2 },
+  { name: "Laura Vilchis Castillo", tickets_quantity: 1 },
+  { name: "Patricia Urrieta y Familia", tickets_quantity: 3 },
+  { name: "Fabiola Urrieta y Familia", tickets_quantity: 2 },
+  { name: "Veronica Urrieta y Familia", tickets_quantity: 2 },
+  { name: "Erika Palma Del Valle y Familia", tickets_quantity: 6 },
   { name: "Ramón Hernández González", tickets_quantity: 4 },
-  { name: "Susana Alvarado", tickets_quantity: 3 },
+  { name: "Profesora Susana Alvarado y Familia", tickets_quantity: 3 },
+  { name: "Cesar López y Familia", tickets_quantity: 4 },
+  { name: "Antonio Balderas", tickets_quantity: 2 },
+  { name: "Karen y Esposo", tickets_quantity: 2 },
+  // Nuevos invitados (pendientes):
   { name: "Silvia Palma", tickets_quantity: 1 },
-  { name: "Nayeli Palma", tickets_quantity: 2 },
-  { name: "Karen Palma", tickets_quantity: 1 },
+  { name: "Nayeli Palma", tickets_quantity: 1 },
   { name: "Abraham González", tickets_quantity: 2 },
   { name: "Sandra González", tickets_quantity: 2 },
   { name: "Lorena González", tickets_quantity: 2 },
@@ -74,15 +89,9 @@ const guests = ref([
   { name: "Francisco Briones", tickets_quantity: 2 },
   { name: "José Briones", tickets_quantity: 3 },
   { name: "Herzain Briones", tickets_quantity: 4 },
-  { name: "Cesar Lopez", tickets_quantity: 3 },
-  { name: "Miguel Marroquin", tickets_quantity: 3 },
 ]);
 
-const searchQuery = ref("");
-const selectedGuest = ref(null);
-const notFound = ref(false);
-const showResults = ref(false);
-
+// 🔍 Computed para filtrar invitados
 const filteredGuests = computed(() => {
   if (!showResults.value || searchQuery.value.trim() === "") return [];
   const results = guests.value.filter((guest) =>
@@ -92,22 +101,51 @@ const filteredGuests = computed(() => {
   return results;
 });
 
-function onSearch() {
+// 🧠 Observador que solo limpia si el cambio viene del teclado
+watch(searchQuery, (newValue, oldValue) => {
+  if (isTyping.value) {
+    selectedGuest.value = null;
+    notFound.value = false;
+  }
+});
+
+// Cuando el usuario escribe, marcamos que está tipeando
+function onInput() {
+  isTyping.value = true;
   showResults.value = true;
-  selectedGuest.value = null;
 }
 
+// Cuando selecciona un invitado, desactivamos esa bandera
 function selectGuest(guest) {
+  isTyping.value = false;
   selectedGuest.value = guest;
   searchQuery.value = guest.name;
   showResults.value = false;
   notFound.value = false;
 }
 
-function confirmAttendance() {
-  alert(
-    `✅ Asistencia confirmada para ${selectedGuest.value.name}. Boletos disponibles: ${selectedGuest.value.tickets_quantity}`
-  );
+function onSearch() {
+  showResults.value = true;
+  selectedGuest.value = null;
+}
+
+function confirmAttendance(phoneNumber) {
+  if (!selectedGuest.value) return;
+  const guestName = selectedGuest.value.name;
+  const tickets = selectedGuest.value.tickets_quantity;
+
+  const message = `✅ Hola, confirmo mi asistencia.\nNombre: ${guestName}\nBoletos: ${tickets}`;
+  const encodedMessage = encodeURIComponent(message);
+  const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+  window.open(url, "_blank");
+}
+
+function closeForm() {
+  isFocused.value = false;
+  searchQuery.value = "";
+  showResults.value = false;
+  selectedGuest.value = null;
+  notFound.value = false;
 }
 </script>
 
@@ -124,28 +162,47 @@ function confirmAttendance() {
         Escribe tu nombre para consultar tus boletos reservados
       </p>
 
-      <div class="form-guests">
+      <div class="form-guests" :class="{ active: isActive }">
         <form
-          class="d-flex flex-column align-items-center"
+          class="d-flex flex-column align-items-center form-autocomplete"
           @submit.prevent="onSearch"
         >
-          <div class="d-flex w-100 justify-content-center gap-2">
+          <div class="close-button-container">
+            <p class="text-uppercase fw-bold playfair playfair-italic">
+              Confirma tu asistencia
+            </p>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              @click="closeForm"
+            ></button>
+          </div>
+
+          <div
+            class="d-flex w-100 justify-content-center gap-2 form-autocomplete-input"
+          >
             <input
               v-model="searchQuery"
               type="text"
               class="form-control form-control-wedding"
               placeholder="Busca tu nombre"
-              @input="showResults = true"
+              @input="onInput"
+              @focus="isFocused = true"
+              @blur="isFocused = false"
             />
             <button type="submit" class="btn btn-primary">Buscar</button>
           </div>
 
-          <div class="autocomplete-content">
-            <ul v-if="filteredGuests.length" class="list-group">
+          <div class="form-autocomplete-input autocomplete-content">
+            <ul
+              v-if="filteredGuests.length"
+              class="list-group autocomplete-list-group"
+            >
               <li
                 v-for="guest in filteredGuests"
                 :key="guest.name"
-                class="list-group-item list-group-item-action"
+                class="list-group-item autocomplete-result-item"
                 @click="selectGuest(guest)"
               >
                 {{ guest.name }}
@@ -161,15 +218,30 @@ function confirmAttendance() {
               v-if="selectedGuest"
               class="card mt-3 p-3 text-center selected-guest-list"
             >
-              <h5>{{ selectedGuest.name }}</h5>
+              <h5 class="text-color-primary fw-bold fs-4">
+                {{ selectedGuest.name }}
+              </h5>
               <p>
                 🎟 Tienes
                 <strong>{{ selectedGuest.tickets_quantity }}</strong> boletos
                 disponibles
               </p>
-              <button class="btn btn-success" @click="confirmAttendance">
-                Confirmar Asistencia
-              </button>
+              <div
+                class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-3"
+              >
+                <button
+                  class="btn btn-outline<-success"
+                  @click="confirmAttendance('+525514158115')"
+                >
+                  Confirmar con la novia 👰‍♀️
+                </button>
+                <button
+                  class="btn btn-outline-success"
+                  @click="confirmAttendance('+525533691211')"
+                >
+                  Confirmar con el novio 🤵‍♂️
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -182,7 +254,7 @@ function confirmAttendance() {
   </section>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .section-list {
   padding: 2rem 0;
 }
@@ -196,27 +268,89 @@ function confirmAttendance() {
 }
 
 .list-group {
-  padding: 1rem;
   overflow-y: auto;
   max-height: 200px;
 }
 
 .list-group-item {
+  width: 100%;
   cursor: pointer;
 }
 
 .selected-guest-list {
   padding: 1rem 0.5rem;
+  border: 1px solid var(--text-color);
+}
+
+.close-button-container {
+  width: 100%;
+  display: none;
+  justify-content: space-between;
+  padding: 1rem 1rem;
+}
+
+.form-autocomplete {
+  position: relative;
+}
+
+.autocomplete-list-group {
+  background-color: #fff;
+  box-shadow: rgba(14, 63, 126, 0.06) 0px 0px 0px 1px,
+    rgba(42, 51, 70, 0.03) 0px 1px 1px -0.5px,
+    rgba(42, 51, 70, 0.04) 0px 2px 2px -1px,
+    rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px,
+    rgba(42, 51, 70, 0.03) 0px 5px 5px -2.5px,
+    rgba(42, 51, 70, 0.03) 0px 10px 10px -5px,
+    rgba(42, 51, 70, 0.03) 0px 24px 24px -8px;
 }
 
 .autocomplete-content {
-  position: relative;
+  position: absolute;
+  width: 100%;
+  top: 4.5rem;
+  z-index: 9999;
 }
 
 @media (max-width: 576px) {
   .form-guests {
     width: 100%;
     padding: 1rem;
+  }
+  .form-autocomplete {
+    height: 100%;
+    position: relative;
+  }
+  .form-guests.active {
+    position: fixed;
+    background-color: #fff;
+    transition: all 0.3s ease;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999999;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
+      rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+    border-top-left-radius: 0.95rem;
+    border-top-right-radius: 0.95rem;
+    .close-button-container {
+      display: flex;
+    }
+  }
+  .autocomplete-content {
+    position: absolute;
+    top: 10rem;
+    width: 100%;
+  }
+  .autocomplete-result-item {
+    border-radius: 0;
+    margin: 0.25rem 0;
+    border: none;
+    font-family: var(--font-title);
+    font-weight: 600;
+  }
+  .list-group {
+    max-height: 100%;
   }
 }
 </style>

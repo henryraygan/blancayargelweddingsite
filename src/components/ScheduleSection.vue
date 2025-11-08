@@ -11,7 +11,7 @@
           <span class="save-the-date-title-content-label">
             <p>Parroquia "La preciosa Sangre de Cristo"</p>
             <p>
-              <b>a las 5.45</b>
+              <b>a las 5:45 pm</b>
             </p>
             <a
               class="btn btn-primary"

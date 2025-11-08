@@ -4,7 +4,9 @@
     <BannerSection />
     <AboutTimeSection />
     <FlowerDivider />
+    <Divider />
     <ScheduleSection />
+    <Divider />
     <SectionLayout>
       <template v-slot:w-section-layout-content>
         <p class="text-description text-center">
@@ -20,8 +22,17 @@
           </p>
         </div>
         <p class="fw-bold text-center text-description">a las 8:00 PM</p>
+        <div class="d-flex justify-content-center my-5">
+          <a
+            class="btn btn-primary btn-lg"
+            href="//maps.app.goo.gl/6xumb6NJ3HwNsmWU8"
+            target="_blank"
+            >Ver en el mapa</a
+          >
+        </div>
       </template>
     </SectionLayout>
+    <Divider />
     <SectionLayout>
       <template v-slot:w-section-layout-content>
         <p class="text-description text-center">Código de vestimenta</p>
@@ -35,6 +46,33 @@
         </p>
       </template>
     </SectionLayout>
+    <Divider />
+    <section>
+      <div class="container">
+        <div class="text-center">
+          <div class="gift-ad">
+            <p class="text-center text-description">
+              Lo más importante para nosotros es compartir este día con ustedes.
+              Si desean hacernos un obsequio, pueden hacerlo a través de nuestra
+              mesa de regalos
+            </p>
+          </div>
+          <h4 class="text-uppercase text-center py-3 my-4">
+            mesa de regalos liverpool
+          </h4>
+          <a
+            class="fs-1 text-decoration-none text-color-primary"
+            href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/51831072"
+            target="_blank"
+          >
+            <span class="fw-bold fst-italic fs-4">Blanca Estela González</span>
+            <br />
+            <span class="text-decoration-underline"> 51831072 </span>
+          </a>
+        </div>
+      </div>
+    </section>
+    <Divider />
     <Autocomplete />
     <footer>
       <div class="container my-5 py-5 text-center">
@@ -56,6 +94,7 @@ import FlowerDivider from "@/components/FlowerDivider.vue";
 import SectionLayout from "@/components/SectionLayout.vue";
 import BAsvg from "@/components/BAsvg.vue";
 import Autocomplete from "@/components/Autocomplete.vue";
+import Divider from "@/components/Divider.vue";
 
 export default {
   name: "HomeView",
@@ -68,6 +107,7 @@ export default {
     SectionLayout,
     BAsvg,
     Autocomplete,
+    Divider,
   },
 };
 </script>
