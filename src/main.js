@@ -5,5 +5,11 @@ import store from './store'
 import "./styles/main.scss";
 import gsap from "./plugins/gsap";
 
+const app = createApp(App)
 
-createApp(App).use(store).use(router).mount('#app')
+// Ignorar etiquetas personalizadas como <ion-icon> o <ion-button>
+app.config.compilerOptions.isCustomElement = (tag) => /^ion-/.test(tag)
+
+app.use(store)
+app.use(router)
+app.mount('#app')

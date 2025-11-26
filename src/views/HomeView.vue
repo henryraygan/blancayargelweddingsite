@@ -7,11 +7,13 @@
     <Divider />
     <ScheduleSection />
     <Divider />
-    <SectionLayout>
+
+    <!-- 🕊 Sección del salón -->
+    <SectionLayout ref="salonSection">
       <template v-slot:w-section-layout-content>
         <p class="text-description text-center">
           Después de la ceremonia religiosa <br />
-          acompañanos a celebrar en el
+          acompáñanos a celebrar en el
         </p>
         <div class="py-3">
           <p class="playfair playfair-italic display-5 text-center">Salón</p>
@@ -22,9 +24,11 @@
           </p>
         </div>
         <p class="fw-bold text-center text-description">a las 8:00 PM</p>
-        <div class="d-flex justify-content-center my-5">
+        <div
+          class="d-flex justify-content-center my-5 flex-column align-items-center"
+        >
           <a
-            class="btn btn-primary btn-lg"
+            class="btn btn-primary btn-lg mb-3"
             href="//maps.app.goo.gl/6xumb6NJ3HwNsmWU8"
             target="_blank"
             >Ver en el mapa</a
@@ -32,8 +36,11 @@
         </div>
       </template>
     </SectionLayout>
+
     <Divider />
-    <SectionLayout>
+
+    <!-- 👗 Sección del código de vestimenta -->
+    <SectionLayout ref="dressCodeSection">
       <template v-slot:w-section-layout-content>
         <p class="text-description text-center">Código de vestimenta</p>
         <p
@@ -46,7 +53,10 @@
         </p>
       </template>
     </SectionLayout>
+
     <Divider />
+
+    <!-- 🎁 Mesa de regalos -->
     <section>
       <div class="container">
         <div class="text-center">
@@ -67,13 +77,16 @@
           >
             <span class="fw-bold fst-italic fs-4">Blanca Estela González</span>
             <br />
-            <span class="text-decoration-underline"> 51831072 </span>
+            <span class="text-decoration-underline">51831072</span>
           </a>
         </div>
       </div>
     </section>
+
     <Divider />
+
     <Autocomplete />
+
     <footer>
       <div class="container my-5 py-5 text-center">
         <BAsvg />
@@ -86,6 +99,10 @@
 </template>
 
 <script>
+import { onMounted, ref } from "vue";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import HeroSection from "@/components/HeroSection.vue";
 import BannerSection from "@/components/BannerSection.vue";
 import AboutTimeSection from "@/components/AboutTimeSection.vue";
@@ -95,6 +112,8 @@ import SectionLayout from "@/components/SectionLayout.vue";
 import BAsvg from "@/components/BAsvg.vue";
 import Autocomplete from "@/components/Autocomplete.vue";
 import Divider from "@/components/Divider.vue";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default {
   name: "HomeView",
@@ -108,6 +127,34 @@ export default {
     BAsvg,
     Autocomplete,
     Divider,
+  },
+  setup() {
+    const salonSection = ref(null);
+    const dressCodeSection = ref(null);
+
+    onMounted(() => {
+      // ✨ Animación suave al hacer scroll
+      const animateSection = (el) => {
+        gsap.from(el.querySelectorAll("p, a, button"), {
+          opacity: 0,
+          y: 40,
+          duration: 1.2,
+          stagger: 0.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      };
+
+      if (salonSection.value?.$el) animateSection(salonSection.value.$el);
+      if (dressCodeSection.value?.$el)
+        animateSection(dressCodeSection.value.$el);
+    });
+
+    return { salonSection, dressCodeSection };
   },
 };
 </script>

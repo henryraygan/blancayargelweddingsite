@@ -3,22 +3,27 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
-          <div class="polaroid-gallery">
-            <img
-              class="polaroid-photo"
-              :src="require('@/assets/media/jovenes.png')"
-              alt=""
-            />
-            <img
-              class="polaroid-photo"
-              :src="require('@/assets/media/casados.png')"
-              alt=""
-            />
-            <img
-              class="polaroid-photo"
-              :src="require('@/assets/media/actual.png')"
-              alt=""
-            />
+          <div class="polaroid-container">
+            <div class="polaroid-gallery">
+              <img
+                class="polaroid-photo"
+                :src="require('@/assets/media/jovenes.png')"
+                alt=""
+              />
+              <img
+                class="polaroid-photo"
+                :src="require('@/assets/media/casados.png')"
+                alt=""
+              />
+              <img
+                class="polaroid-photo"
+                :src="require('@/assets/media/actual.png')"
+                alt=""
+              />
+            </div>
+            <div class="polaroid-arrow">
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </div>
           </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
@@ -51,20 +56,23 @@ import { onMounted } from "vue";
 import gsap from "@/plugins/gsap";
 
 onMounted(() => {
+  const isMobile = window.innerWidth <= 768; // 📱 detectar móvil
+
+  // Animación polaroid — solo aplica opacidad en desktop
   gsap.from(".polaroid-photo", {
     scrollTrigger: {
       trigger: ".polaroid-gallery",
       start: "top 75%",
       scrub: 1,
     },
-    y: (index) => index * 40 - 60,
-    opacity: 0,
+    y: isMobile ? 0 : (index) => index * 40 - 60, // sin movimiento en mobile
+    opacity: isMobile ? 1 : 0, // sin efecto de fade en mobile
     duration: 1.8,
     ease: "power3.out",
     stagger: 0.3,
   });
 
-  // Animación del título principal (línea por línea)
+  // Animación del título
   gsap.from("h2.playfair-title br, h2.playfair-title", {
     scrollTrigger: {
       trigger: "h2.playfair-title",
@@ -78,7 +86,7 @@ onMounted(() => {
     stagger: 0.2,
   });
 
-  // Animación del párrafo de descripción
+  // Animación de párrafos
   gsap.from(".about-time-description p", {
     scrollTrigger: {
       trigger: ".about-time-description",
@@ -91,6 +99,28 @@ onMounted(() => {
     ease: "power2.out",
     stagger: 0.3,
   });
+
+  // 💫 Flecha que avanza el scroll
+  const gallery = document.querySelector(".polaroid-gallery");
+  const arrow = document.querySelector(".polaroid-arrow");
+
+  if (arrow && gallery) {
+    arrow.addEventListener("click", () => {
+      const scrollAmount = gallery.clientWidth * 0.8;
+      gallery.scrollBy({
+        left: scrollAmount,
+        behavior: "smooth",
+      });
+    });
+
+    // 🔄 Ocultar flecha al llegar al final
+    gallery.addEventListener("scroll", () => {
+      const isAtEnd =
+        gallery.scrollLeft + gallery.clientWidth >= gallery.scrollWidth - 10;
+      arrow.style.opacity = isAtEnd ? "0" : "1";
+      arrow.style.pointerEvents = isAtEnd ? "none" : "auto";
+    });
+  }
 });
 </script>
 
@@ -152,7 +182,7 @@ onMounted(() => {
     overflow: hidden;
     display: flex;
     flex-direction: row;
-    gap: 1rem;
+    gap: 0.75rem;
     min-height: auto;
     overflow-x: auto;
     padding: 1rem 0.5rem;
@@ -164,7 +194,12 @@ onMounted(() => {
       right: initial;
       top: initial;
       bottom: initial;
+      width: 83%;
       border-radius: 0.5rem;
+      object-fit: cover;
+      background-color: #fff;
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
+        rgb(209, 213, 219) 0px 0px 0px 1px inset;
     }
   }
 
@@ -177,6 +212,23 @@ onMounted(() => {
     padding: 0;
     text-align: left;
     font-size: 1.3rem;
+  }
+
+  .polaroid-container {
+    position: relative;
+  }
+  .polaroid-arrow {
+    position: absolute;
+    background-color: #fff;
+    top: 50%;
+    right: 10px;
+    padding: 0.75rem;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>
